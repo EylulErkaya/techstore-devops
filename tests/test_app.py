@@ -2,6 +2,12 @@
 TechStore - Kapsamlı Test Paketi
 Çalıştırmak için: pytest tests/ -v
 """
+
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pytest
 import json
 from app import app, PRODUCTS, get_product_by_id
