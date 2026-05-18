@@ -46,12 +46,12 @@ pipeline {
                         --cov-report=term-missing
                 '''
             }
-            post {
-                always {
-                    junit 'test-results/unit-tests.xml'
-                    publishCoverage adapters: [coberturaAdapter('coverage.xml')]
-                }
-            }
+            // post {
+            //     always {
+            //         junit 'test-results/unit-tests.xml'
+            //         publishCoverage adapters: [coberturaAdapter('coverage.xml')]
+            //     }
+            // }
         }
 
         // ── 4. KOD KALİTE ANALİZİ ──────────────────────────────
