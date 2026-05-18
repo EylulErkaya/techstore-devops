@@ -22,7 +22,7 @@ pipeline {
         // ── 2. ORTAM KURULUMU ───────────────────────────────────
         stage('Setup') {
             steps {
-                bat '''
+                sh '''
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install --upgrade pip
@@ -35,7 +35,7 @@ pipeline {
         // ── 3. BİRİM TESTLERİ ──────────────────────────────────
         stage('Unit Tests') {
             steps {
-                bat '''
+                sh '''
                     . venv/bin/activate
                     pytest tests/test_app.py \
                         -v \
@@ -58,7 +58,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat '''
+                    sh '''
                         . venv/bin/activate
                         sonar-scanner \
                             -Dsonar.projectKey=techstore \
@@ -86,7 +86,7 @@ pipeline {
         // ── 6. DOCKER İMAJI ─────────────────────────────────────
         stage('Build Docker Image') {
             steps {
-                bat """
+                sh """
                     docker build \
                         -t ${DOCKER_IMAGE}:${env.BUILD_NUMBER} \
                         -t ${DOCKER_IMAGE}:latest \
@@ -106,7 +106,7 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    bat """
+                    sh """
                         echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
                         docker tag ${DOCKER_IMAGE}:latest \$DOCKER_USER/${DOCKER_IMAGE}:${env.BUILD_NUMBER}
                         docker tag ${DOCKER_IMAGE}:latest \$DOCKER_USER/${DOCKER_IMAGE}:latest
@@ -121,7 +121,7 @@ pipeline {
         // ── 8. DEPLOY ───────────────────────────────────────────
         stage('Deploy') {
             steps {
-                bat """
+                sh """
                     # Eski konteyneri durdur
                     docker stop techstore-app 2>/dev/null || true
                     docker rm techstore-app 2>/dev/null || true
@@ -142,7 +142,7 @@ pipeline {
         // ── 9. SMOKE TEST ───────────────────────────────────────
         stage('Smoke Test') {
             steps {
-                bat '''
+                sh '''
                     # /health endpoint kontrol
                     STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/health)
                     if [ "$STATUS" != "200" ]; then
@@ -165,7 +165,7 @@ pipeline {
         // ── 10. UI TESTLERİ ─────────────────────────────────────
         stage('UI Tests') {
             steps {
-                bat '''
+                sh '''
                     . venv/bin/activate
                     pytest tests/test_ui.py -v --tb=short || true
                 '''
