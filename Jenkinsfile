@@ -187,7 +187,7 @@ pipeline {
             sh """
                 curl -X POST -H 'Content-type: application/json' \
                 --data '{
-                    "text":"✅ TechStore Pipeline Başarılı!\\n🚀 Deploy tamamlandı.\\n📦 Build: #${BUILD_NUMBER}\\n🌿 Branch: ${BRANCH_NAME}"
+                    "text":"✅ TechStore Pipeline Başarılı!\\n🚀 Deploy tamamlandı.\\n📦 Build: #${BUILD_NUMBER}\\n🌿 Branch: main"
                 }' \
                 ${SLACK_WEBHOOK_URL}
             """
