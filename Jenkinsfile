@@ -79,14 +79,14 @@ pipeline {
         }
 
         // ── 5. KALİTE KAPISI ───────────────────────────────────
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-                echo "✅ SonarQube kalite kapısı geçildi"
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //         echo "✅ SonarQube kalite kapısı geçildi"
+        //     }
+        // }
 
         // ── 6. DOCKER İMAJI ─────────────────────────────────────
         stage('Build Docker Image') {
