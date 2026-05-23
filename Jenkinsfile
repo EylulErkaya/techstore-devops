@@ -57,18 +57,23 @@ pipeline {
         // ── 4. KOD KALİTE ANALİZİ ──────────────────────────────
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        . venv/bin/activate
-                        sonar-scanner \
-                            -Dsonar.projectKey=techstore \
-                            -Dsonar.projectName="TechStore E-Commerce" \
-                            -Dsonar.sources=. \
-                            -Dsonar.exclusions=venv/**,tests/**,**/__pycache__/** \
-                            -Dsonar.python.coverage.reportPaths=coverage.xml \
-                            -Dsonar.host.url=${SONAR_HOST} \
-                            -Dsonar.login=${SONAR_TOKEN}
-                    '''
+                script {
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                            . venv/bin/activate
+
+                            ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.projectKey=techstore \
+                                -Dsonar.projectName="TechStore E-Commerce" \
+                                -Dsonar.sources=. \
+                                -Dsonar.exclusions=venv/**,tests/**,**/__pycache__/** \
+                                -Dsonar.python.coverage.reportPaths=coverage.xml \
+                                -Dsonar.host.url=${SONAR_HOST} \
+                                -Dsonar.login=${SONAR_TOKEN}
+                        """
+                    }
                 }
             }
         }
